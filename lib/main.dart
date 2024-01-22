@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,12 +36,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> elementList = [];
+  
+  List<dynamic> msgIdList = [];
 
   final TextEditingController _controller = TextEditingController();
 
   FocusNode msgInputFocusNode = FocusNode();
 
+
+  static get ipAddress => "10.59.138.115";
+  static get portNumber => 3000;
+
+  final channel = WebSocketChannel.connect(
+    Uri.parse('ws://$ipAddress:$portNumber'),
+  );
+
   final ScrollController _scrollController = ScrollController();
+
+
   void _scrollDown() {
     _scrollController.animateTo(
       _scrollController.position.extentTotal,
@@ -48,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+
   Widget _recieveChatMsg(String msg) {
     return FractionallySizedBox(
       widthFactor: 0.8,
@@ -55,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[Container(
-          constraints: BoxConstraints(minWidth: 100, maxWidth: double.infinity),
+          constraints: const BoxConstraints(minWidth: 20, maxWidth: double.infinity),
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
@@ -132,22 +147,44 @@ class _MyHomePageState extends State<MyHomePage> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text("Filler Filler Filler Filler Filler Filler Filler Filler Filler Filler Filler ", style: TextStyle(color: Colors.white)),
-                      )],
+                      ),
+                        StreamBuilder(
+                          stream: channel.stream,
+                          builder: (context, snapshot) {
+
+                            if (snapshot.hasData) {
+                              final data = jsonDecode(snapshot.data.toString()) as Map<String, dynamic>;
+                              final msgId = data["id"]; // Replace this with your logic for generating a unique identifier
+                              final receivedMsg = data["msg"];
+                              // Check if a message with the same identifier is not already in the list
+                              if (!msgIdList.any((element) => element == msgId)) {
+                                msgIdList.add(msgId);
+                                elementList.add(_recieveChatMsg(receivedMsg));
+
+                                Future.microtask(() {
+                                  if (mounted) {
+                                    setState(() {_scrollDown();}); // Notify Flutter to rebuild the widget tree
+                                  }
+                                });
+
+                              }
+                            }
+                            return SizedBox.shrink();
+
+                          },
+                        ),
+                      ],
+
                     ),
                     Expanded(
 
                       child: ListView.builder(
-                      controller: _scrollController,
-
-                      itemCount: elementList.length,
-                      itemBuilder: (context, index) {
-                        if (index < elementList.length) {
+                        controller: _scrollController,
+                        itemCount: elementList.length,
+                        itemBuilder: (context, index) {
                           return elementList[index];
-                        } else {
-                          return const SizedBox();
-                        }
-                      },
-                    ),
+                        },
+                      ),
                     ),
 
 
@@ -194,6 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   _controller.clear();
                                   msgInputFocusNode.requestFocus();
                                   _scrollDown();
+                                  channel.sink.add(value);
 
 
 
@@ -231,8 +269,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           setState(() {
                             if(_controller.text.trim().isEmpty) return;
                             elementList.add(_addChatMsg(_controller.text));
+                            channel.sink.add(_controller.text);
                             _controller.clear();
                             msgInputFocusNode.requestFocus();
+                            _scrollDown();
+
                           });
                         },
                       ),
