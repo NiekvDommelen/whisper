@@ -18,22 +18,44 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+
+      routes:{
+        '/': (context) => const HomePage(),
+        '/chat': (context) => const ChatPage(),
+      }
+
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
 
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePage();
+}
+
+class _HomePage extends State<HomePage>{
+  @override
+  Widget build(BuildContext context) {
+
+
+  }
+
+}
+
+class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
+
 
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ChatPage> createState() => _ChatPage();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ChatPage extends State<ChatPage> {
 
   List<Widget> elementList = [];
   
@@ -116,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
 
-        title: Text(widget.title),
+        title: Text("Chat App", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
       ),
       body: Center(
 
