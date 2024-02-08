@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -17,10 +18,369 @@ class MyApp extends StatelessWidget {
         title: 'Whisper',
         theme: ThemeData(
           useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              primary: const Color.fromARGB(255, 81, 43, 129),
+              onPrimary: const Color.fromARGB(255, 68, 119, 206),
+              secondary: const Color.fromARGB(255, 53, 21, 93),
+              onSecondary: const Color.fromARGB(40, 84, 35, 146),
+              surface: const Color.fromARGB(255, 53, 21, 93),
+              brightness: Brightness.dark,
+              seedColor: const Color.fromARGB(255, 53, 21, 93)),
         ),
         routes: {
-          '/': (context) => const ChatPage(),
+          '/': (context) => const LoginPage(), // Homepage()
         });
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePage();
+}
+
+class _HomePage extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text("Whisper",
+            style: GoogleFonts.jura(
+                textStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800))),
+      ),
+      body: Column(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                  width: screenWidth - 20,
+                  height: 60,
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text("N",
+                            style: GoogleFonts.jura(
+                                textStyle: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800))),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: screenWidth - 140,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text("Niek",
+                                    style: GoogleFonts.jura(
+                                        textStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800))),
+                                Text(
+                                  "chat message go brrrrrrrbr",
+                                  style: GoogleFonts.jura(
+                                      textStyle:
+                                          TextStyle(color: Colors.white70),
+                                      fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 35,
+                            alignment: Alignment.topCenter,
+                            child: Text("9:49",
+                                style: GoogleFonts.jura(
+                                    textStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w800))),
+                          )
+                        ],
+                      )
+                    ],
+                  ))
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                  width: screenWidth - 20,
+                  height: 60,
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text("N",
+                            style: GoogleFonts.jura(
+                                textStyle: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800))),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: screenWidth - 140,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text("Niek",
+                                    style: GoogleFonts.jura(
+                                        textStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800))),
+                                Text(
+                                  "chat message go brrrrrrrrrrrr",
+                                  style: GoogleFonts.jura(
+                                      textStyle:
+                                          TextStyle(color: Colors.white70),
+                                      fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 35,
+                            alignment: Alignment.topCenter,
+                            child: Text("9:49",
+                                style: GoogleFonts.jura(
+                                    textStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w800))),
+                          )
+                        ],
+                      )
+                    ],
+                  ))
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPage();
+}
+
+class _LoginPage extends State<LoginPage> {
+  FocusNode _usernameTextFieldFocusNode = FocusNode();
+  bool _isUsernameFocused = false;
+
+  FocusNode _passwordTextFieldFocusNode = FocusNode();
+  bool _isPasswordFocused = false;
+
+  final TextEditingController _usernameTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          "Login to whisper",
+          style: GoogleFonts.jura(
+            textStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: 30,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ),
+      body: Center(
+        heightFactor: 0.6,
+        child: SizedBox(
+          width: screenWidth - 30,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "login",
+                style: GoogleFonts.jura(
+                  textStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Focus(
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isUsernameFocused = hasFocus;
+                  });
+                },
+                child: AnimatedOpacity(
+                  opacity: _isUsernameFocused ? 1.0 : 0.5,
+                  duration: Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: _isUsernameFocused ? Theme.of(context).colorScheme.onPrimary : Color.fromARGB(125, 112, 0, 255),
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    child: TextField(
+                      controller: _usernameTextController,
+                      focusNode: _usernameTextFieldFocusNode,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your username',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Focus(
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isPasswordFocused = hasFocus;
+                  });
+                },
+                child: AnimatedOpacity(
+                  opacity: _isPasswordFocused ? 1.0 : 0.5,
+                  duration: Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: _isPasswordFocused ? Theme.of(context).colorScheme.onPrimary : Color.fromARGB(125, 112, 0, 255),
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    child: TextField(
+                      obscureText: true,
+                      autocorrect: false,
+                      controller: _passwordTextController,
+                      focusNode: _passwordTextFieldFocusNode,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your password',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 25),
+
+              _usernameTextController.text != "" && _passwordTextController.text != ""
+                ? Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+
+                    border: Border.all(
+
+                      color: Colors.lightGreenAccent,
+
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                  ),
+                    child: TextButton(
+                        style: ButtonStyle(
+
+                        ),
+                        onPressed: null , child: Text("Continue", style: TextStyle(color: Colors.white),)),
+                  )
+              : Container(
+              decoration: BoxDecoration(
+              color: Colors.transparent,
+
+              border: Border.all(
+
+              color: Colors.green,
+
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+            ),
+            child: TextButton(
+                style: ButtonStyle(
+
+                ),
+                onPressed: null , child: Text("Continue")),
+          ),
+            SizedBox(height: 20),
+              Text("Dont have an account?", style: TextStyle(color: Colors.grey)),
+              TextButton(onPressed: null, child: Text("sign-up", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, decoration: TextDecoration.underline, decorationColor: Theme.of(context).colorScheme.onPrimary),))
+            ],
+          ),
+        ),
+      )
+    );
   }
 }
 
@@ -230,9 +590,11 @@ class _ChatPage extends State<ChatPage> {
                                     jsonDecode(snapshot.data.toString())
                                         as Map<String, dynamic>;
                                 final msgId = data["id"]; // Message id
-                                final receivedMsg = data["msg"]; // Message data (text)
+                                final receivedMsg =
+                                    data["msg"]; // Message data (text)
                                 // Check if a message with the same identifier is not already in the list
-                                if (!msgIdList.any((element) => element == msgId)) {
+                                if (!msgIdList
+                                    .any((element) => element == msgId)) {
                                   // Add the message id to the list
                                   msgIdList.add(msgId);
                                   // Check if the message is a system message
