@@ -23,19 +23,6 @@ class _LoginPage extends State<LoginPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(
-            "Login to whisper",
-            style: GoogleFonts.jura(
-              textStyle: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ),
         body: Center(
           heightFactor: 0.6,
           child: SizedBox(
