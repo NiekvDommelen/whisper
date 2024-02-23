@@ -13,12 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // Define a boolean flag to track user authentication status
-  // return true if user is authenticated, else return false
-  bool checkUserAuthenticationStatus() {
-    return false;
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +31,11 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // Check user authentication status and route accordingly
-      initialRoute: checkUserAuthenticationStatus() ? '/' : '/login',
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
-        '/': (context) => const HomePage(),
+        '/home': (context) => const HomePage(),
         '/chat': (context) => const ChatPage(),
       },
     );
