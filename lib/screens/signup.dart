@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -21,6 +24,35 @@ class _SignupPage extends State<SignupPage> {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+
+  void _SignupUser() async {
+    String username = _usernameTextController.text;
+    String password = _passwordTextController.text;
+    String email = _emailTextController.text;
+    String address = 'http://192.168.1.79:3000/api/signup';
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'username': username,
+        'email': email,
+        'password': password,
+      },
+    );
+
+    debugPrint(response.body);
+    var $data = jsonDecode(response.body);
+    if($data["success"] = true){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('loggedIn', true);
+      prefs.setBool('userid', $data["userid"]);
+      Navigator.popAndPushNamed(context, '/home');
+    }else{
+      debugPrint('Login failed');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +99,9 @@ class _SignupPage extends State<SignupPage> {
                       child: TextField(
                         controller: _emailTextController,
                         focusNode: _emailTextFieldFocusNode,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                         decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 16),
@@ -100,6 +135,9 @@ class _SignupPage extends State<SignupPage> {
                       child: TextField(
                         controller: _usernameTextController,
                         focusNode: _usernameTextFieldFocusNode,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                         decoration: InputDecoration(
                           labelText: 'Username',
                           labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 16),
@@ -135,6 +173,9 @@ class _SignupPage extends State<SignupPage> {
                         autocorrect: false,
                         controller: _passwordTextController,
                         focusNode: _passwordTextFieldFocusNode,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 16),
@@ -164,7 +205,7 @@ class _SignupPage extends State<SignupPage> {
                       style: ButtonStyle(
 
                       ),
-                      onPressed: null , child: Text("Continue", style: TextStyle(color: Colors.white),)),
+                      onPressed: _SignupUser , child: Text("Continue", style: TextStyle(color: Colors.white),)),
                 )
                     : Container(
                   decoration: BoxDecoration(
