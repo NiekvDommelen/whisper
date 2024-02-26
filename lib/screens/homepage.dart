@@ -8,8 +8,81 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-class _HomePage extends State<HomePage> {
+class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+  // TODO: implement drawer + animation!!
+  bool _isOpen = false;
+
+  void _drawerClick(){
+    setState(() {
+      _isOpen = !_isOpen;
+      if(_isOpen){
+        controller.forward();
+      }else{
+        controller.reverse();
+      }
+    });
+
+    debugPrint(_isOpen.toString());
+  }
+
+  Widget drawer(){
+    if(_isOpen){
+      return FractionallySizedBox(
+        widthFactor: 0.9,
+        child: Container(
+          height: animation.value,
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Open!"),
+                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up)),
+
+              ],
+
+            ),
+          ),
+        ),
+      );
+    }else{
+      return FractionallySizedBox(
+        widthFactor: 0.9,
+        child: Container(
+          height: animation.value,
+          child: Container(
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Closed!"),
+                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_down)),
+
+              ],
+
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    animation = Tween<double>(begin: 60, end: 300).animate(controller)
+      ..addListener(() {
+        setState(() {
+          // The state that has changed here is the animation object's value.
+        });
+      });
+
+  }
+
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -25,6 +98,7 @@ class _HomePage extends State<HomePage> {
       ),
       body: Column(
         children: [
+          drawer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -52,7 +126,7 @@ class _HomePage extends State<HomePage> {
                             style: GoogleFonts.jura(
                                 textStyle: TextStyle(
                                     color:
-                                    Theme.of(context).colorScheme.onPrimary,
+                                        Theme.of(context).colorScheme.onPrimary,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800))),
                       ),
@@ -78,7 +152,7 @@ class _HomePage extends State<HomePage> {
                                   "chat message go brrrrrrrbr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                      TextStyle(color: Colors.white70),
+                                          TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -130,7 +204,7 @@ class _HomePage extends State<HomePage> {
                             style: GoogleFonts.jura(
                                 textStyle: TextStyle(
                                     color:
-                                    Theme.of(context).colorScheme.onPrimary,
+                                        Theme.of(context).colorScheme.onPrimary,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800))),
                       ),
@@ -156,7 +230,7 @@ class _HomePage extends State<HomePage> {
                                   "chat message go brrrrrrrrrrrr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                      TextStyle(color: Colors.white70),
+                                          TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
