@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
-  // TODO: implement drawer + animation!!
+  // TODO: add user information and text fields
   bool _isOpen = false;
 
   void _drawerClick(){
@@ -31,16 +31,115 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     if(_isOpen){
       return FractionallySizedBox(
         widthFactor: 0.9,
-        child: Container(
+        child: SizedBox(
           height: animation.value,
           child: Container(
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Open!"),
-                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text("N",
+                          style: GoogleFonts.jura(
+                              textStyle: TextStyle(
+                                  color:
+                                  Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w800))),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Name",
+                          hintStyle: GoogleFonts.jura(
+                              textStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800)),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                        style: GoogleFonts.jura(
+                            textStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800)),
+                      ),
+                    ),
+                  ],
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    hintStyle: GoogleFonts.jura(
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800)),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                  style: GoogleFonts.jura(
+                      textStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800)),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    hintStyle: GoogleFonts.jura(
+                        textStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800)),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                  style: GoogleFonts.jura(
+                      textStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800)),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
 
+                    border: Border.all(
+
+                      color: Colors.lightGreenAccent,
+
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                  ),
+                  child: TextButton(
+                      onPressed: null , child: Text("Save", style: TextStyle(color: Colors.white),)),
+                ),
+                const Expanded(child: SizedBox(),),
+                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up), visualDensity: VisualDensity(vertical: 0, horizontal: 4),),
               ],
 
             ),
@@ -57,11 +156,8 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("Closed!"),
-                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_down)),
-
+                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_down),visualDensity: VisualDensity(vertical: 0, horizontal: 4)),
               ],
-
             ),
           ),
         ),
@@ -74,7 +170,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     super.initState();
     controller =
         AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    animation = Tween<double>(begin: 60, end: 300).animate(controller)
+    animation = Tween<double>(begin: 40, end: 280).animate(controller)
       ..addListener(() {
         setState(() {
           // The state that has changed here is the animation object's value.
