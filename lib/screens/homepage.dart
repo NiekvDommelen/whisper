@@ -61,6 +61,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
                     SizedBox(
                       width: 200,
                       child: TextField(
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: InputDecoration(
                           hintText: "Name",
                           hintStyle: GoogleFonts.jura(
@@ -84,6 +85,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
                   ],
                 ),
                 TextField(
+                  cursorColor: Theme.of(context).colorScheme.onPrimary,
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: GoogleFonts.jura(
@@ -104,6 +106,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
                           fontWeight: FontWeight.w800)),
                 ),
                 TextField(
+                  cursorColor: Theme.of(context).colorScheme.onPrimary,
                   decoration: InputDecoration(
                     hintText: "Password",
                     hintStyle: GoogleFonts.jura(
@@ -184,13 +187,48 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
+        actions: [
+          SizedBox(
+            width: screenWidth - 60,
+            child: SearchAnchor(
+                isFullScreen: true,
+                builder: (BuildContext context, SearchController controller) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(onPressed: () => {controller.openView()}, icon: const Icon(Icons.search)),
+                    ],
+                  );
+                  
+                }, suggestionsBuilder:
+                (BuildContext context, SearchController controller) {
+              return List<ListTile>.generate(5, (int index) {
+                final String item = 'item $index';
+                return ListTile(
+                  title: Text(item),
+                  onTap: () {
+                    setState(() {
+                      controller.closeView(item);
+                    });
+                  },
+                );
+              });
+            }),
+          ),
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem(
+                  child: Text("Settings"),
+                ),
+                const PopupMenuItem(
+                  child: Text("Logout"),
+                ),
+              ];
+            },
+          ),
+        ],
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text("Whisper",
-            style: GoogleFonts.jura(
-                textStyle: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w800))),
       ),
       body: Column(
         children: [
