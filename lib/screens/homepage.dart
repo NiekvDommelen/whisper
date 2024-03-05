@@ -220,6 +220,95 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
       body: Column(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: screenWidth - 60,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                    child: TextField(
+                      cursorColor: Theme.of(context).colorScheme.onPrimary,
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        hintStyle: GoogleFonts.jura(
+                            textStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800)),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      style: GoogleFonts.jura(
+                          textStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800)),
+                      onTapOutside: (_pointerDownEvent){
+                        setState(() {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          searchController.reverse();
+                        });
+
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          // You can add your logic here for text change if needed
+                        });
+                      },
+                      onTap: () {
+                        setState(() {
+                          searchController.forward();
+                        });
+                      },
+                      onEditingComplete: () {
+                        setState(() {
+                          searchController.reverse();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+
+                PopupMenuButton(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem(
+                        child: Text("Settings"),
+                      ),
+                      const PopupMenuItem(
+                        child: Text("Logout"),
+                      ),
+                    ];
+                  },
+                ),
+              ],
+            ),
+          ),
+          AnimatedBuilder(
+            animation: searchAnimation,
+            builder: (context, child) {
+              return Container(
+                height: searchAnimation.value,
+                child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text("item $index"),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+
           drawer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
