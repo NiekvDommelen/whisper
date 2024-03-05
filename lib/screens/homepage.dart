@@ -337,7 +337,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                             style: GoogleFonts.jura(
                                 textStyle: TextStyle(
                                     color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    Theme.of(context).colorScheme.onPrimary,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800))),
                       ),
@@ -363,7 +363,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   "chat message go brrrrrrrbr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                          TextStyle(color: Colors.white70),
+                                      TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -415,7 +415,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                             style: GoogleFonts.jura(
                                 textStyle: TextStyle(
                                     color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                    Theme.of(context).colorScheme.onPrimary,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w800))),
                       ),
@@ -441,7 +441,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   "chat message go brrrrrrrrrrrr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                          TextStyle(color: Colors.white70),
+                                      TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
