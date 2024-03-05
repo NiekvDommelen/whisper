@@ -11,9 +11,12 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
-  late Animation<double> animation;
-  late AnimationController controller;
+class _HomePage extends State<HomePage> with TickerProviderStateMixin {
+  late Animation<double> drawerAnimation;
+  late Animation<double> searchAnimation;
+  late AnimationController drawerController;
+  late AnimationController searchController;
+  late FocusNode searchFocusNode = FocusNode();
   // TODO: add user information and text fields
   bool _isOpen = false;
 
