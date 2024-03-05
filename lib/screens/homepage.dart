@@ -24,9 +24,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       _isOpen = !_isOpen;
       if(_isOpen){
-        controller.forward();
+        drawerController.forward();
       }else{
-        controller.reverse();
+        drawerController.reverse();
       }
     });
 
