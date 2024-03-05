@@ -217,50 +217,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        actions: [
-          SizedBox(
-            width: screenWidth - 60,
-            child: SearchAnchor(
-                isFullScreen: true,
-                builder: (BuildContext context, SearchController controller) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(onPressed: () => {controller.openView()}, icon: const Icon(Icons.search)),
-                    ],
-                  );
-                  
-                }, suggestionsBuilder:
-                (BuildContext context, SearchController controller) {
-              return List<ListTile>.generate(5, (int index) {
-                final String item = 'item $index';
-                return ListTile(
-                  title: Text(item),
-                  onTap: () {
-                    setState(() {
-                      controller.closeView(item);
-                    });
-                  },
-                );
-              });
-            }),
-          ),
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem(
-                  child: Text("Settings"),
-                ),
-                const PopupMenuItem(
-                  child: Text("Logout"),
-                ),
-              ];
-            },
-          ),
-        ],
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+
       body: Column(
         children: [
           drawer(),
