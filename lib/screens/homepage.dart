@@ -32,6 +32,23 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
     debugPrint(_isOpen.toString());
   }
+   List<String> searchList = [];
+
+   void _searchUsers($query) async{
+    String address = 'http://10.59.138.23:3000/api/users';
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'query': $query,
+      },
+    );
+    var $data = jsonDecode(response.body);
+    debugPrint($data.toString());
+    searchList.add($data);
+  }
 
   Widget drawer(){
     if(_isOpen){
