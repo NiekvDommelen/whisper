@@ -194,9 +194,17 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller =
+    drawerController =
         AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    animation = Tween<double>(begin: 40, end: 280).animate(controller)
+    drawerAnimation = Tween<double>(begin: 40, end: 280).animate(drawerController)
+      ..addListener(() {
+        setState(() {
+          // The state that has changed here is the animation object's value.
+        });
+      });
+    searchController =
+        AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    searchAnimation = Tween<double>(begin: 0, end: 250).animate(searchController)
       ..addListener(() {
         setState(() {
           // The state that has changed here is the animation object's value.
