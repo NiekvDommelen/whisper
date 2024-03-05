@@ -55,7 +55,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       return FractionallySizedBox(
         widthFactor: 0.9,
         child: SizedBox(
-          height: animation.value,
+          height: drawerAnimation.value,
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
