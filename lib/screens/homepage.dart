@@ -32,7 +32,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
     debugPrint(_isOpen.toString());
   }
-   List<String> searchList = [];
+   List searchList = [];
 
    void _searchUsers($query) async{
     String address = 'http://10.59.138.23:3000/api/users';
@@ -47,7 +47,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     );
     var $data = jsonDecode(response.body);
     debugPrint($data.toString());
-    searchList.add($data);
+    setState(() {
+      searchList.clear();
+      searchList = $data;
+    });
+
   }
 
   Widget drawer(){
@@ -260,11 +264,12 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                       },
                       onChanged: (value) {
                         setState(() {
-                          // You can add your logic here for text change if needed
+                          _searchUsers(value);
                         });
                       },
                       onTap: () {
                         setState(() {
+                          _searchUsers("");
                           searchController.forward();
                         });
                       },
@@ -296,12 +301,26 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
             animation: searchAnimation,
             builder: (context, child) {
               return Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 height: searchAnimation.value,
                 child: ListView.builder(
-                  itemCount: 10,
+                  // TODO: Limit will be set by api/database so item count can always be searchList length
+                  itemCount: (searchList.length > 10) ? 10 : searchList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text("item $index"),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                      titleTextStyle: GoogleFonts.jura(
+                        textStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 20,
+                        ),
+                      ),
+                      title: Text(searchList[index]["username"]),
                     );
                   },
                 ),
