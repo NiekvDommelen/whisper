@@ -20,6 +20,8 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   // TODO: add user information and text fields
   bool _isOpen = false;
 
+  // TODO: remove this temp list
+  List temp = [{"id":1,"username":"user1","email":null,"password":"1234"},{"id":2,"username":"user2","email":"niek","password":"1234"}];
   void _drawerClick(){
     setState(() {
       _isOpen = !_isOpen;
@@ -33,9 +35,12 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     debugPrint(_isOpen.toString());
   }
    List searchList = [];
-
+   bool searchIsLoading = false;
    void _searchUsers($query) async{
-    String address = 'http://10.59.138.23:3000/api/users';
+    setState(() {
+      searchIsLoading = true;
+    });
+    String address = 'http://192.168.1.78:3000/api/users';
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -50,6 +55,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       searchList.clear();
       searchList = $data;
+      searchIsLoading = false;
     });
 
   }
@@ -236,6 +242,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: TextField(
+                      focusNode: searchFocusNode,
                       cursorColor: Theme.of(context).colorScheme.onPrimary,
                       decoration: InputDecoration(
                         hintText: "Search",
@@ -257,7 +264,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                               fontWeight: FontWeight.w800)),
                       onTapOutside: (_pointerDownEvent){
                         setState(() {
-                          FocusManager.instance.primaryFocus?.unfocus();
+                          searchFocusNode.unfocus();
                           searchController.reverse();
                         });
 
@@ -268,8 +275,10 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         });
                       },
                       onTap: () {
+
+
                         setState(() {
-                          _searchUsers("");
+                          searchFocusNode.requestFocus();
                           searchController.forward();
                         });
                       },
@@ -305,22 +314,35 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 height: searchAnimation.value,
-                child: ListView.builder(
+                child: searchIsLoading
+                    ? Center(
+                  // Display a loading indicator while data is being fetched
+                  child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary,),
+              )
+                  : ListView.builder(
                   // TODO: Limit will be set by api/database so item count can always be searchList length
                   itemCount: (searchList.length > 10) ? 10 : searchList.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
 
-                      titleTextStyle: GoogleFonts.jura(
-                        textStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: 20,
-                        ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
-                      title: Text(searchList[index]["username"]),
+                      child: ListTile(
+
+                        //TODO: Change icon if user is already a friend/contact
+                        //TODO: create a function to add user to contacts
+                        trailing: IconButton( onPressed: null, icon: const Icon(Icons.person_add),),
+                          titleTextStyle: GoogleFonts.jura(
+                            textStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 20,
+                            ),
+                          ),
+                          title: Text(searchList[index]["username"]),
+                        ),
                     );
                   },
                 ),
