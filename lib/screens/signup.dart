@@ -226,7 +226,7 @@ class _SignupPage extends State<SignupPage> {
                 ),
                 SizedBox(height: 20),
                 Text("Already have an account?", style: TextStyle(color: Colors.grey)),
-                TextButton(onPressed: null, child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, decoration: TextDecoration.underline, decorationColor: Theme.of(context).colorScheme.onPrimary),))
+                TextButton(onPressed: () {Navigator.pushNamed(context, "/login");}, child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, decoration: TextDecoration.underline, decorationColor: Theme.of(context).colorScheme.onPrimary),))
               ],
             ),
           ),
