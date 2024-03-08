@@ -12,6 +12,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
+class userData {
+  String username;
+  String email;
+  int userid;
+  userData(this.username, this.email, this.userid);
+}
+
 class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   late Animation<double> drawerAnimation;
   late Animation<double> searchAnimation;
