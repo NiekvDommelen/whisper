@@ -348,8 +348,8 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                       const PopupMenuItem(
                         child: Text("Settings"),
                       ),
-                      const PopupMenuItem(
-                        child: Text("Logout"),
+                      PopupMenuItem(
+                        child: TextButton(onPressed: _logoutUser,child: Text("Logout", style: TextStyle(color: Colors.white),)),
                       ),
                     ];
                   },
