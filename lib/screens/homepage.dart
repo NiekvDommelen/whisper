@@ -134,8 +134,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   fontSize: 30,
                                   fontWeight: FontWeight.w800))),
                     ),
-                    SizedBox(
-                      width: 200,
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      width: screenWidth - 125,
                       child: TextField(
                         controller: _usernameTextController,
                         cursorColor: Theme.of(context).colorScheme.onPrimary,
