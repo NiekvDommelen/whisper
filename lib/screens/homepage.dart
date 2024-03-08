@@ -137,6 +137,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                     SizedBox(
                       width: 200,
                       child: TextField(
+                        controller: _usernameTextController,
                         cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: InputDecoration(
                           hintText: "Name",
@@ -161,6 +162,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
                 TextField(
+                  controller: _emailTextController,
                   cursorColor: Theme.of(context).colorScheme.onPrimary,
                   decoration: InputDecoration(
                     hintText: "Email",
@@ -247,6 +249,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+    getUserData();
+
     drawerController =
         AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     drawerAnimation = Tween<double>(begin: 40, end: 280).animate(drawerController)
