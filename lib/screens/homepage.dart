@@ -25,6 +25,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController drawerController;
   late AnimationController searchController;
   late FocusNode searchFocusNode = FocusNode();
+
+  final TextEditingController _usernameTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
   // TODO: add user information and text fields
   bool _isOpen = false;
 
