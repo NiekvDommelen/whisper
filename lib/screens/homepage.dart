@@ -103,7 +103,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
   }
 
-  Widget drawer(){
+  Widget drawer(double screenWidth){
     if(_isOpen){
       return FractionallySizedBox(
         widthFactor: 0.9,
@@ -393,7 +393,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
             },
           ),
 
-          drawer(),
+          drawer(screenWidth),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
