@@ -31,8 +31,40 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   // TODO: add user information and text fields
   bool _isOpen = false;
 
-  // TODO: remove this temp list
-  List temp = [{"id":1,"username":"user1","email":null,"password":"1234"},{"id":2,"username":"user2","email":"niek","password":"1234"}];
+  final _userData = userData("", "", 0);
+
+  void getUserData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userid = prefs.getInt("userid");
+    String address = 'http://10.59.138.102:3000/api/user';
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+      },
+    );
+    var $data = jsonDecode(response.body);
+    debugPrint($data.toString());
+    setState(() {
+      _userData.username = $data["username"];
+      _userData.email = $data["email"];
+      _userData.userid = $data["id"];
+      _usernameTextController.text = _userData.username;
+      _emailTextController.text = _userData.email;
+    });
+  }
+
+  void _logoutUser() async {
+    setState(() async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      Navigator.popAndPushNamed(context, '/login');
+    });
+  }
+
   void _drawerClick(){
     setState(() {
       _isOpen = !_isOpen;
