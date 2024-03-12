@@ -103,6 +103,42 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
   }
 
+  List contactList = [];
+  List invitationsList = [];
+  List awaitingList = [];
+
+  void _getContacts() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final $userid = prefs.getInt("userid");
+    String address = "http://10.59.138.101:3000/api/contacts";
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': $userid.toString(),
+      },
+    );
+    var $data = jsonDecode(response.body);
+    setState(() {
+      awaitingList.clear();
+      invitationsList.clear();
+      contactList.clear();
+      for(var i = 0; i < $data.length; i++){
+        if($data[i]["status"] == "awaiting" && $data[i]["sender"] == $userid){
+          awaitingList.add($data[i]);
+        }else if($data[i]["status"] == "accepted"){
+          contactList.add($data[i]);
+        }else if($data[i]["status"] == "awaiting" && $data[i]["receiver"] == $userid){
+          invitationsList.add($data[i]);
+        }
+      }
+
+
+    });
+  }
+
   Widget drawer(double screenWidth){
     if(_isOpen){
       return FractionallySizedBox(
