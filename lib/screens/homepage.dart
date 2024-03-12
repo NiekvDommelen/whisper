@@ -322,8 +322,150 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.surface,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 60,
+              child: DrawerHeader(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                child: Text(
+                  'Contacts',
+                  style: GoogleFonts.jura(
+                      textStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800)),
+                ),
+              ),
+            ),
 
-      body: Column(
+            Container(
+              margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    width: 2.0,
+                  ),
+                ),
+              ),
+              child: Text("Invitations" , style: GoogleFonts.jura(
+                  textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800))
+              ),
+            ),
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: invitationsList.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                    ),
+                    child: ListTile(
+                      title: Text(invitationsList[index]["sender"].toString()),
+                      trailing: Container(
+                        width: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.check, color: Colors.green,),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.close, color: Colors.red,),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: awaitingList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                  ),
+                  child: ListTile(
+                    title: Text(awaitingList[index]["receiver"].toString()),
+                    trailing: Container(
+                      width: 100,
+                      child: Text("Awaiting", style: TextStyle(color: Colors.white),),
+                    ),
+                  ),
+                );
+              },
+            ),
+
+
+            Container(
+              margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    width: 2.0,
+                  ),
+                ),
+              ),
+              child: Text("Contacts" , style: GoogleFonts.jura(
+                  textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800))
+              ),
+            ),
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: contactList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                  ),
+                  child: ListTile(
+                    title: (contactList[index]["sender"] == _userData.userid) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
+                    trailing: Container(
+                      width: 100,
+                      child: Text("accepted", style: TextStyle(color: Colors.white),),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+
+      ),
+      body:
+      Column(
         children: [
           Container(
             decoration: BoxDecoration(
@@ -332,8 +474,12 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                IconButton(
+                  onPressed: () {_getContacts(); _scaffoldKey.currentState!.openDrawer();},
+                  icon: const Icon(Icons.contacts_outlined),
+                ),
                 SizedBox(
-                  width: screenWidth - 60,
+                  width: screenWidth - 80,
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: TextField(
@@ -370,8 +516,6 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         });
                       },
                       onTap: () {
-
-
                         setState(() {
                           searchFocusNode.requestFocus();
                           searchController.forward();
