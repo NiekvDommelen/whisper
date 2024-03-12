@@ -315,10 +315,12 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       });
 
   }
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.surface,
 
       body: Column(
