@@ -299,7 +299,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
     drawerController =
         AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    drawerAnimation = Tween<double>(begin: 40, end: 280).animate(drawerController)
+    drawerAnimation = Tween<double>(begin: 50, end: 300).animate(drawerController)
       ..addListener(() {
         setState(() {
           // The state that has changed here is the animation object's value.
