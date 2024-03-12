@@ -259,8 +259,13 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   child: TextButton(
                       onPressed: null , child: Text("Save", style: TextStyle(color: Colors.white),)),
                 ),
-                const Expanded(child: SizedBox(),),
-                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up), visualDensity: VisualDensity(vertical: 0, horizontal: 4),),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up), visualDensity: VisualDensity(vertical: 0, horizontal: 4),),
+                  ],
+                )
+
               ],
 
             ),
