@@ -244,6 +244,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                           fontWeight: FontWeight.w800)),
                 ),
                 Container(
+                  height: 35,
                   margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
