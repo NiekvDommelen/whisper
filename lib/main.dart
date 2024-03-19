@@ -13,7 +13,6 @@ void main() {
   runApp(const MyApp());
 }
 
-// TODO: Make a class for the api (perhaps in a separate file)
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

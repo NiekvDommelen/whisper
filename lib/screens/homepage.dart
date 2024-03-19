@@ -24,7 +24,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
-  // TODO: add user information and text fields
+
   bool _isOpen = false;
 
   //api.dart
