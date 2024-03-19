@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:whisper/api.dart';
 
+import '../setup.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,13 +14,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-class userData {
-  String username;
-  String email;
-  int userid;
-  userData(this.username, this.email, this.userid);
-}
-
 class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   late Animation<double> drawerAnimation;
   late Animation<double> searchAnimation;
@@ -28,35 +23,19 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+
   // TODO: add user information and text fields
   bool _isOpen = false;
 
-  final _userData = userData("", "", 0);
-
+  //api.dart
   void getUserData() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userid = prefs.getInt("userid");
-    String address = 'http://10.59.138.102:3000/api/user';
-    var response = await http.post(Uri.parse(address),
-
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: {
-        'userid': userid.toString(),
-      },
-    );
-    var $data = jsonDecode(response.body);
-    debugPrint($data.toString());
+    var data = await Api.getUserData();
     setState(() {
-      _userData.username = $data["username"];
-      _userData.email = $data["email"];
-      _userData.userid = $data["id"];
-      _usernameTextController.text = _userData.username;
-      _emailTextController.text = _userData.email;
+      _usernameTextController.text = data["username"];
+      _emailTextController.text = data["email"];
     });
   }
-
+  //api.dart
   void _logoutUser() async {
     setState(() async{
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,24 +56,14 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
     debugPrint(_isOpen.toString());
   }
-   List searchList = [];
-   bool searchIsLoading = false;
-   void _searchUsers($query) async{
+  List searchList = [];
+  bool searchIsLoading = false;
+
+  void _searchUsers($query) async{
     setState(() {
       searchIsLoading = true;
     });
-    String address = 'http://192.168.1.78:3000/api/users';
-    var response = await http.post(Uri.parse(address),
-
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: {
-        'query': $query,
-      },
-    );
-    var $data = jsonDecode(response.body);
-    debugPrint($data.toString());
+    var $data = await Api.searchUsers($query);
     setState(() {
       searchList.clear();
       searchList = $data;
@@ -108,34 +77,21 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   List awaitingList = [];
 
   void _getContacts() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final $userid = prefs.getInt("userid");
-    String address = "http://10.59.138.101:3000/api/contacts";
-    var response = await http.post(Uri.parse(address),
-
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: {
-        'userid': $userid.toString(),
-      },
-    );
-    var $data = jsonDecode(response.body);
+    var $data = await Api.getContacts();
     setState(() {
       awaitingList.clear();
       invitationsList.clear();
       contactList.clear();
+      debugPrint(Userdata.userid.toString());
       for(var i = 0; i < $data.length; i++){
-        if($data[i]["status"] == "awaiting" && $data[i]["sender"] == $userid){
+        if($data[i]["status"] == "awaiting" && $data[i]["sender"] == Userdata.userid){
           awaitingList.add($data[i]);
         }else if($data[i]["status"] == "accepted"){
           contactList.add($data[i]);
-        }else if($data[i]["status"] == "awaiting" && $data[i]["receiver"] == $userid){
+        }else if($data[i]["status"] == "awaiting" && $data[i]["receiver"] == Userdata.userid){
           invitationsList.add($data[i]);
         }
       }
-
-
     });
   }
 
@@ -290,11 +246,20 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       );
     }
   }
-
+  // ______DEBUG______
+  Widget debugBtn(){
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pushNamed(context, "/debug");
+      },
+      child: const Icon(Icons.developer_mode, color: Colors.white,),
+    );
+  }
+  // ______END DEBUG______
   @override
   void initState() {
     super.initState();
-
+    setup();
     getUserData();
 
     drawerController =
@@ -320,6 +285,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      // ______DEBUG______
+      floatingActionButton: debugBtn(),
+      // ______END DEBUG______
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: Drawer(
@@ -451,7 +419,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                   ),
                   child: ListTile(
-                    title: (contactList[index]["sender"] == _userData.userid) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
+                    title: (contactList[index]["sender"] == Userdata.username) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
                     trailing: Container(
                       width: 100,
                       child: Text("accepted", style: TextStyle(color: Colors.white),),
@@ -573,7 +541,8 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
                         //TODO: Change icon if user is already a friend/contact
                         //TODO: create a function to add user to contacts
-                        trailing: IconButton( onPressed: null, icon: const Icon(Icons.person_add),),
+                        //TODO: if user is already a contact but invite is pending show a checkmark, if its accepted show a chat icon that redirect the user to the chat
+                        trailing: IconButton( onPressed: () => {Api.addContact(searchList[index]["id"])}, icon: const Icon(Icons.person_add),),
                           titleTextStyle: GoogleFonts.jura(
                             textStyle: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
