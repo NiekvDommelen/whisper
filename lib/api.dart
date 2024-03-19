@@ -131,3 +131,68 @@ class api{
     }
   }
 
+  //TODO: fix this shijt!!
+  void _logoutUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    //TODO: clear userdata
+  }
+
+  Future<dynamic> searchUsers(String search) async {
+    String address = "${_baseURL}users";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'query': search,
+      },
+    );
+    var $data = [];
+    if(response.body.isNotEmpty) {
+      $data = jsonDecode(response.body);
+    }
+    return $data;
+  }
+
+  Future<dynamic> getContacts() async {
+    int userid = await getUserId();
+    String address = "${_baseURL}contacts";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+      },
+    );
+    var $data = [];
+    if(response.body.isNotEmpty) {
+      $data = jsonDecode(response.body);
+    }
+    return $data;
+  }
+
+  Future<bool> addContact(contactid) async {
+    int userid = await getUserId();
+    String address = "${_baseURL}contact";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+        'contact_userid': contactid.toString(),
+      },
+    );
+
+    bool success = response.body == "true";
+    return success;
+  }
+}
