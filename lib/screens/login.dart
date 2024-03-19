@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import "../setup.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,26 +25,17 @@ class _LoginPage extends State<LoginPage> {
   void _loginUser() async {
     String username = _usernameTextController.text;
     String password = _passwordTextController.text;
-    String address = 'http://10.59.138.86:3000/api/login';
-    var response = await http.post(Uri.parse(address),
-
-    headers: <String, String>{
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    },
-    body: {
-      'username': username,
-      'password': password,
-    },
-    );
-    debugPrint(response.body);
-    var $data = jsonDecode(response.body);
-    if($data["success"] = true){
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('loggedIn', true);
-      prefs.setInt('userid', $data["userid"]);
+    bool succes = await Api.loginUser(username, password);
+    if (succes){
       Navigator.popAndPushNamed(context, '/home');
     }else{
-      debugPrint('Login failed');
+      //TODO: review this / make it better
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid username or password'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 
