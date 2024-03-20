@@ -25,8 +25,8 @@ class _LoginPage extends State<LoginPage> {
   void _loginUser() async {
     String username = _usernameTextController.text;
     String password = _passwordTextController.text;
-    bool succes = await Api.loginUser(username, password);
-    if (succes){
+    bool success = await Api.loginUser(username, password);
+    if (success){
       Navigator.popAndPushNamed(context, '/home');
     }else{
       //TODO: review this / make it better
