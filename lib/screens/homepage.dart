@@ -93,7 +93,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       contactList.clear();
       debugPrint(Userdata.userid.toString());
       for(var i = 0; i < $data.length; i++){
-        if($data[i]["status"] == "awaiting" && $data[i]["sender"] == Userdata.userid){
+        if($data[i]["status"] == "awaiting" && $data[i]["sender"] == Userdata.userid || $data[i]["status"] == "declined" && $data[i]["sender"] == Userdata.userid){
           awaitingList.add($data[i]);
         }else if($data[i]["status"] == "accepted"){
           contactList.add($data[i]);
@@ -112,7 +112,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
           height: drawerAnimation.value,
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: const BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -136,7 +136,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   fontWeight: FontWeight.w800))),
                     ),
                     Container(
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         maxWidth: 500,
                       ),
                       width: screenWidth - 125,
@@ -219,15 +219,15 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                       color: Colors.lightGreenAccent,
 
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                    borderRadius: const BorderRadius.all(Radius.circular(2)),
                   ),
-                  child: TextButton(
+                  child: const TextButton(
                       onPressed: null , child: Text("Save", style: TextStyle(color: Colors.white),)),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up), visualDensity: VisualDensity(vertical: 0, horizontal: 4),),
+                    IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_up), visualDensity: const VisualDensity(vertical: 0, horizontal: 4),),
                   ],
                 )
 
@@ -240,14 +240,14 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     }else{
       return FractionallySizedBox(
         widthFactor: 0.9,
-        child: Container(
+        child: SizedBox(
           height: drawerAnimation.value,
           child: Container(
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSecondary, borderRadius: const BorderRadius.only(bottomLeft:Radius.circular(15.0) ,bottomRight: Radius.circular(15.0))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_down),visualDensity: VisualDensity(vertical: 0, horizontal: 4)),
+                IconButton(onPressed: _drawerClick, icon: const Icon(Icons.keyboard_arrow_down),visualDensity: const VisualDensity(vertical: 0, horizontal: 4)),
               ],
             ),
           ),
@@ -350,11 +350,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
                     ),
                     child: ListTile(
                       title: Text(invitationsList[index]["sender"].toString()),
-                      trailing: Container(
+                      trailing: SizedBox(
                         width: 100,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -407,11 +407,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: ListTile(
                     title: Text(awaitingList[index]["receiver"].toString()),
-                    trailing: Container(
+                    trailing: const SizedBox(
                       width: 100,
                       child: Text("Awaiting", style: TextStyle(color: Colors.white),),
                     ),
@@ -448,11 +448,11 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: ListTile(
                     title: (contactList[index]["sender"] == Userdata.username) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
-                    trailing: Container(
+                    trailing: const SizedBox(
                       width: 100,
                       child: Text("accepted", style: TextStyle(color: Colors.white),),
                     ),
@@ -467,6 +467,9 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       body:
       Column(
         children: [
+          SizedBox(
+            height: 30,
+          ),
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary,
@@ -479,7 +482,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   icon: const Icon(Icons.contacts_outlined),
                 ),
                 SizedBox(
-                  width: screenWidth - 80,
+                  width: screenWidth - 120,
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: TextField(
@@ -540,7 +543,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         child: Text("Settings"),
                       ),
                       PopupMenuItem(
-                        child: TextButton(onPressed: _logoutUser,child: Text("Logout", style: TextStyle(color: Colors.white),)),
+                        child: TextButton(onPressed: _logoutUser,child: const Text("Logout", style: TextStyle(color: Colors.white),)),
                       ),
                     ];
                   },
@@ -566,13 +569,17 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   itemCount: (searchList.length > 10) ? 10 : searchList.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
 
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                      ),
-                      child: ListTile(
+                        decoration: BoxDecoration(
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .secondary,
+                          borderRadius: const BorderRadius.all(
+                              Radius.circular(25)),
+                        ),
+                        child: ListTile(
 
                           //TODO: Change icon if user is already a friend/contact
                           //TODO: create a function to add user to contacts
@@ -597,14 +604,17 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                            : const Icon(Icons.check),
                           titleTextStyle: GoogleFonts.jura(
                             textStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .onPrimary,
                               fontSize: 20,
                             ),
                           ),
                           title: Text(searchList[index]["username"]),
                         ),
-                    );
-                  },
+                      );
+                    }
                 ),
               );
             },
@@ -620,7 +630,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.onSecondary,
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -646,7 +656,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: screenWidth - 140,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -664,7 +674,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   "chat message go brrrrrrrbr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                      TextStyle(color: Colors.white70),
+                                      const TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -698,7 +708,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.onSecondary,
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -724,7 +734,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: screenWidth - 140,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -742,7 +752,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   "chat message go brrrrrrrrrrrr",
                                   style: GoogleFonts.jura(
                                       textStyle:
-                                      TextStyle(color: Colors.white70),
+                                      const TextStyle(color: Colors.white70),
                                       fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
