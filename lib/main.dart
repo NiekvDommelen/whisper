@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'screens/homepage.dart';
 import 'screens/login.dart';
 import 'screens/signup.dart';
 import 'screens/chatpage.dart';
 
+// ____DEBUG____
+import 'screens/DebugPage.dart';
+
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -37,6 +40,8 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/home': (context) => const HomePage(),
         '/chat': (context) => const ChatPage(),
+        // ____DEBUG____
+        '/debug': (context) => const DebugPage(),
       },
     );
   }

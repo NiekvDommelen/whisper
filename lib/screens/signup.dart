@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import "../setup.dart";
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -29,28 +30,17 @@ class _SignupPage extends State<SignupPage> {
     String username = _usernameTextController.text;
     String password = _passwordTextController.text;
     String email = _emailTextController.text;
-    String address = 'http://192.168.1.79:3000/api/signup';
-    var response = await http.post(Uri.parse(address),
-
-      headers: <String, String>{
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-      body: {
-        'username': username,
-        'email': email,
-        'password': password,
-      },
-    );
-
-    debugPrint(response.body);
-    var $data = jsonDecode(response.body);
-    if($data["success"] = true){
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('loggedIn', true);
-      prefs.setBool('userid', $data["userid"]);
+    bool success = await Api.signupUser(username, email, password);
+    if (success){
       Navigator.popAndPushNamed(context, '/home');
     }else{
-      debugPrint('Login failed');
+      //TODO: review this / make it better
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("A error occured while signing up, please try again later"),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 
@@ -226,7 +216,7 @@ class _SignupPage extends State<SignupPage> {
                 ),
                 SizedBox(height: 20),
                 Text("Already have an account?", style: TextStyle(color: Colors.grey)),
-                TextButton(onPressed: null, child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, decoration: TextDecoration.underline, decorationColor: Theme.of(context).colorScheme.onPrimary),))
+                TextButton(onPressed: () {Navigator.pushNamed(context, "/login");}, child: Text("Login", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, decoration: TextDecoration.underline, decorationColor: Theme.of(context).colorScheme.onPrimary),))
               ],
             ),
           ),
