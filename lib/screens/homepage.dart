@@ -270,6 +270,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     setup();
     getUserData();
+    _getContacts();
 
     drawerController =
         AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
@@ -359,11 +360,33 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                var response = Api.acceptContact(invitationsList[index]["contact"]);
+                                if(await response){
+                                  _getContacts();
+                                }else{
+                                  const SnackBar(
+                                    content: Text('Failed to accept invitation, please try again later.'),
+                                    duration: Duration(seconds: 3),
+                                  );
+                                }
+
+                              },
                               icon: const Icon(Icons.check, color: Colors.green,),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                var response = Api.declineContact(invitationsList[index]["contact"]);
+                                if(await response){
+                                  _getContacts();
+                                }else{
+                                  const SnackBar(
+                                    content: Text('Failed to decline invitation, please try again later.'),
+                                    duration: Duration(seconds: 3),
+                                  );
+                                }
+
+                              },
                               icon: const Icon(Icons.close, color: Colors.red,),
                             ),
                           ],
@@ -460,6 +483,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     child: TextField(
+                      controller: _searchTextController,
                       focusNode: searchFocusNode,
                       cursorColor: Theme.of(context).colorScheme.onPrimary,
                       decoration: InputDecoration(
@@ -481,15 +505,17 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                               fontSize: 20,
                               fontWeight: FontWeight.w800)),
                       onTapOutside: (_pointerDownEvent){
-                        setState(() {
-                          searchFocusNode.unfocus();
-                          searchController.reverse();
-                        });
-
+                        if(_pointerDownEvent.position.dy > 300){
+                          setState(() {
+                            searchFocusNode.unfocus();
+                            searchController.reverse();
+                          });
+                        }
                       },
-                      onChanged: (value) {
+                      onChanged: (value) async {
+                        await _searchUsers(value);
                         setState(() {
-                          _searchUsers(value);
+
                         });
                       },
                       onTap: () {
@@ -548,10 +574,27 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                       ),
                       child: ListTile(
 
-                        //TODO: Change icon if user is already a friend/contact
-                        //TODO: create a function to add user to contacts
-                        //TODO: if user is already a contact but invite is pending show a checkmark, if its accepted show a chat icon that redirect the user to the chat
-                        trailing: IconButton( onPressed: () => {Api.addContact(searchList[index]["id"])}, icon: const Icon(Icons.person_add),),
+                          //TODO: Change icon if user is already a friend/contact
+                          //TODO: create a function to add user to contacts
+                          //TODO: if user is already a contact but invite is pending show a checkmark, if its accepted show a chat icon that redirect the user to the chat
+                          trailing: !searchList[index]["contact"] ? IconButton(
+                            onPressed: () async {
+                              var response = await Api.addContact(searchList[index]["id"]);
+                              if(response){
+                                setState(() {
+                                  _searchUsers(_searchTextController.text);
+                                  _getContacts();
+                                });
+                              }else{
+                                const SnackBar(
+                                  content: Text('Failed to send invitation, please try again later.'),
+                                  duration: Duration(seconds: 3),
+                                );
+                              }
+                            },
+                            icon: const Icon(Icons.person_add),
+                          )
+                           : const Icon(Icons.check),
                           titleTextStyle: GoogleFonts.jura(
                             textStyle: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
