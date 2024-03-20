@@ -20,6 +20,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _searchTextController = TextEditingController();
 
 
   bool _isOpen = false;
@@ -53,20 +54,31 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
 
     debugPrint(_isOpen.toString());
   }
-  List searchList = [];
+  var searchList = [];
   bool searchIsLoading = false;
-
-  void _searchUsers($query) async{
+  Future<bool> _searchUsers($query) async{
     setState(() {
       searchIsLoading = true;
     });
     var $data = await Api.searchUsers($query);
+    searchList.clear();
+    searchList = $data;
+
+    for (int i = 0; i < searchList.length; i++) {
+      await Api.contactExists(Userdata.userid, searchList[i]["id"]).then((value) {
+        if(value){
+          searchList[i]["contact"] = true;
+        }else{
+          searchList[i]["contact"] = false;
+        }
+
+      });
+    }
+
     setState(() {
-      searchList.clear();
-      searchList = $data;
       searchIsLoading = false;
     });
-
+    return true;
   }
 
   List contactList = [];
