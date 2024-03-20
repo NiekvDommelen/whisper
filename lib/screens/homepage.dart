@@ -581,8 +581,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                         ),
                         child: ListTile(
 
-                          //TODO: Change icon if user is already a friend/contact
-                          //TODO: create a function to add user to contacts
+
                           //TODO: if user is already a contact but invite is pending show a checkmark, if its accepted show a chat icon that redirect the user to the chat
                           trailing: !searchList[index]["contact"] ? IconButton(
                             onPressed: () async {
