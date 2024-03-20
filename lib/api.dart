@@ -195,4 +195,61 @@ class api{
     bool success = response.body == "true";
     return success;
   }
+
+  Future<bool> acceptContact(contactid) async {
+    String address = "${_baseURL}accept_contact_request";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'contact_id': contactid.toString(),
+      },
+    );
+
+    return response.body == "true";
+  }
+
+  Future<bool> declineContact(contactid) async {
+    String address = "${_baseURL}decline_contact_request";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'contact_id': contactid.toString(),
+      },
+    );
+
+    return response.body == "true";
+  }
+
+  Future<bool> contactExists (int userid, int contact_userid) async{
+
+    String address = "${_baseURL}contacts";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+      },
+    );
+
+    var $data = jsonDecode(response.body);
+
+    for (var contact in $data){
+      if(contact["receiver"] == contact_userid){
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
