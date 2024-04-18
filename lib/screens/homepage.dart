@@ -295,6 +295,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       // ______DEBUG______
       floatingActionButton: debugBtn(),
@@ -722,6 +723,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
               )
               )
             ],
+          ),
           ),
         ],
       ),
