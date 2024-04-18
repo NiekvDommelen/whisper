@@ -1,10 +1,38 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
 import 'userdata.dart';
 
 userdata Userdata = userdata(0, "", "");
 api Api = api();
+
+var chatStream = StreamController.broadcast();
+
+class Ws {
+  late WebSocketChannel _channel;
+  WebSocketChannel get channel => _channel;
+
+
+
+  void connect(int userid) async{
+    _channel = WebSocketChannel.connect(
+      Uri.parse('ws://10.59.138.132:3001'),
+    );
+    await _channel.ready;
+
+    _channel.sink.add(jsonEncode({"userid": userid, "status": "connecting"}));
+
+  }
+
+}
+
+
+
+
 
 void setup() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -14,5 +42,11 @@ void setup() async {
     Userdata.username = userdata["username"];
     Userdata.email = userdata["email"];
     Userdata.userid = userdata["id"];
+    Ws ws = Ws();
+    ws.connect(Userdata.userid);
+    ws.channel.stream.listen((data) {
+      chatStream.add(jsonDecode(data));
+    });
+
   }
 }
