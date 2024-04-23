@@ -9,6 +9,7 @@ import 'userdata.dart';
 
 userdata Userdata = userdata(0, "", "");
 api Api = api();
+Ws ws = Ws();
 
 var chatStream = StreamController.broadcast();
 
@@ -42,7 +43,6 @@ void setup() async {
     Userdata.username = userdata["username"];
     Userdata.email = userdata["email"];
     Userdata.userid = userdata["id"];
-    Ws ws = Ws();
     ws.connect(Userdata.userid);
     ws.channel.stream.listen((data) {
       chatStream.add(jsonDecode(data));

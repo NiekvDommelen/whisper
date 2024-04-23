@@ -21,6 +21,8 @@ class _ChatPage extends State<ChatPage>{
 
   late StreamSubscription streamSubscription;
 
+  TextEditingController chatInputController = TextEditingController();
+
   List<dynamic> messages = [];
   bool loading = true;
   late int userid;
@@ -203,6 +205,7 @@ class _ChatPage extends State<ChatPage>{
               children: [
                 Expanded(
                   child: TextField(
+                    controller: chatInputController,
                     decoration: InputDecoration(
                       hintText: "Type a message",
                     ),
@@ -210,7 +213,7 @@ class _ChatPage extends State<ChatPage>{
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: (){},
+                  onPressed: (){ if(chatInputController.value.text.trim() == ""){return;} ws.channel.sink.add(jsonEncode({"receiver": data["contact_user"], "message_data": chatInputController.value.text})); chatInputController.clear();}
                 ),
               ],
             ),
