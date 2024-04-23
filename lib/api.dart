@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:whisper/userdata.dart';
 
 class api{
-  static const String _baseURL = "http://10.59.138.23:3000/api/";
+  static const String _baseURL = "http://10.59.138.132:3000/api/";
 
 
   api();
@@ -251,5 +251,28 @@ class api{
     }
 
     return false;
+  }
+
+  Future<dynamic> getMessages(int offset) async {
+    int userid = await getUserId();
+    String address = "${_baseURL}messages";
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+        'offset': offset.toString(),
+      },
+    );
+    var $data = [];
+    if(response.body.isNotEmpty) {
+      $data = jsonDecode(response.body);
+    }
+    return $data;
+
+
   }
 }

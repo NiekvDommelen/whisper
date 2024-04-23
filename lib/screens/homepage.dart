@@ -1,5 +1,6 @@
 
 import '../setup.dart';
+import 'chatpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -294,6 +295,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       // ______DEBUG______
       floatingActionButton: debugBtn(),
@@ -361,7 +363,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                           children: [
                             IconButton(
                               onPressed: () async {
-                                var response = Api.acceptContact(invitationsList[index]["contact"]);
+                                var response = Api.acceptContact(invitationsList[index]["contact_id"]);
                                 if(await response){
                                   _getContacts();
                                 }else{
@@ -620,161 +622,108 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
           ),
 
           drawer(screenWidth),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          Container(
+            height: screenHeight - 133,
+            child:
+          ListView(
             children: [
               Container(
-                  width: screenWidth - 20,
-                  height: 60,
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  height: screenHeight - 133,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text("N",
-                            style: GoogleFonts.jura(
-                                textStyle: TextStyle(
-                                    color:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w800))),
+                  child:
+              ListView.builder(
+                  itemCount: contactList.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: screenWidth - 20,
+                      height: 80,
+                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        borderRadius: const BorderRadius.all(Radius.circular(25)),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: TextButton(style: TextButton.styleFrom(
+                        minimumSize: Size.zero, // Set this
+                        padding: EdgeInsets.zero, // and this
+                      ),
+                          onPressed: () => {Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(data: {"contact_user": (contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),}),
+
+                        ),
+                      )}, child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: screenWidth - 140,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text("Niek",
+                          Container(
+                            margin: const EdgeInsets.all(10),
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text((contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
+                                style: GoogleFonts.jura(
+                                    textStyle: TextStyle(
+                                        color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w800))),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: screenWidth - 140,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Text((contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
+                                        style: GoogleFonts.jura(
+                                            textStyle: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w800))),
+                                    Text(
+                                      "for later",
+                                      style: GoogleFonts.jura(
+                                          textStyle:
+                                          const TextStyle(color: Colors.white70),
+                                          fontSize: 12),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 35,
+                                alignment: Alignment.topCenter,
+                                child: Text("22:22",
                                     style: GoogleFonts.jura(
                                         textStyle: TextStyle(
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .onPrimary,
-                                            fontSize: 20,
+                                            fontSize: 15,
                                             fontWeight: FontWeight.w800))),
-                                Text(
-                                  "chat message go brrrrrrrbr",
-                                  style: GoogleFonts.jura(
-                                      textStyle:
-                                      const TextStyle(color: Colors.white70),
-                                      fontSize: 12),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 35,
-                            alignment: Alignment.topCenter,
-                            child: Text("9:49",
-                                style: GoogleFonts.jura(
-                                    textStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w800))),
+                              )
+                            ],
                           )
                         ],
-                      )
-                    ],
-                  ))
+                      )),);
+                  }
+              )
+              )
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                  width: screenWidth - 20,
-                  height: 60,
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        alignment: Alignment.center,
-                        child: Text("N",
-                            style: GoogleFonts.jura(
-                                textStyle: TextStyle(
-                                    color:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w800))),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: screenWidth - 140,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text("Niek",
-                                    style: GoogleFonts.jura(
-                                        textStyle: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800))),
-                                Text(
-                                  "chat message go brrrrrrrrrrrr",
-                                  style: GoogleFonts.jura(
-                                      textStyle:
-                                      const TextStyle(color: Colors.white70),
-                                      fontSize: 12),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 35,
-                            alignment: Alignment.topCenter,
-                            child: Text("9:49",
-                                style: GoogleFonts.jura(
-                                    textStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w800))),
-                          )
-                        ],
-                      )
-                    ],
-                  ))
-            ],
           ),
         ],
       ),
