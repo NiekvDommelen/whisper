@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:whisper/userdata.dart';
 import "../setup.dart";
 
 class SignupPage extends StatefulWidget {
@@ -26,21 +27,63 @@ class _SignupPage extends State<SignupPage> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
+  var inputError = {};
+
+  bool _inputValidation( username, email, password) {
+    inputError = {};
+    if (username == ""){
+      inputError["username"] = "empty";
+    }else if(username.length < 5){
+      inputError["username"] = "short";
+    }
+    if (email == ""){
+      inputError["email"] = "empty";
+    }else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)){
+      inputError["email"] = "invalid";
+    }
+    if (password == ""){
+      inputError["password"] = "empty";
+    }else if(password.length < 8){
+      inputError["password"] = "short";
+    }
+
+    if(inputError["username"] != null || inputError["email"] != null || inputError["password"] != null){
+      return true;
+    }else{
+      return false;
+    }
+
+  }
   void _SignupUser() async {
     String username = _usernameTextController.text;
     String password = _passwordTextController.text;
     String email = _emailTextController.text;
-    bool success = await Api.signupUser(username, email, password);
-    if (success){
+
+    if(_inputValidation(username, email, password)){
+      setState(() {});
+      return;
+    }
+
+    var signup = await Api.signupUser(username, email, password);
+    if (signup["success"]?? false == true){
       Navigator.popAndPushNamed(context, '/home');
     }else{
-      //TODO: review this / make it better
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("A error occured while signing up, please try again later"),
-          duration: Duration(seconds: 3),
-        ),
-      );
+      if(signup["error"] == "username already exists"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Username already exists"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "A error occured while signing up, please try again later"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -103,7 +146,9 @@ class _SignupPage extends State<SignupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 25),
+                if(inputError["email"] == "empty") Text("Email cannot be empty", style: TextStyle(color: Colors.red)),
+                if(inputError["email"] == "invalid") Text("Email is invalid", style: TextStyle(color: Colors.red)),
+                if(inputError['email'] == null) SizedBox(height: 25),
                 Focus(
                   onFocusChange: (hasFocus) {
                     setState(() {
@@ -139,7 +184,9 @@ class _SignupPage extends State<SignupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                if(inputError["username"] == "empty") Text("Username cannot be empty", style: TextStyle(color: Colors.red)),
+                if(inputError["username"] == "short") Text("Username must be at least 5 characters long", style: TextStyle(color: Colors.red)),
+                if(inputError["username"] == null) SizedBox(height: 20,),
                 Focus(
                   onFocusChange: (hasFocus) {
                     setState(() {
@@ -177,8 +224,9 @@ class _SignupPage extends State<SignupPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 25),
-
+                if(inputError["password"] == "empty") Text("Password cannot be empty", style: TextStyle(color: Colors.red)),
+                if(inputError["password"] == "short") Text("Password must be at least 8 characters long", style: TextStyle(color: Colors.red)),
+                if(inputError["password"] == null) SizedBox(height: 25),
                 _usernameTextController.text != "" && _passwordTextController.text != ""
                     ? Container(
                   decoration: BoxDecoration(

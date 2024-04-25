@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:whisper/userdata.dart';
 
 class api{
-  static const String _baseURL = "http://10.59.138.132:3000/api/";
+  static const String _baseURL = "http://10.59.138.18:3000/api/";
 
 
   api();
@@ -104,7 +104,7 @@ class api{
     }
   }
 
-  Future<bool> signupUser(String username, String email, String password) async {
+  Future<dynamic> signupUser(String username, String email, String password) async {
     String address = "${_baseURL}signup";
     var response = await http.post(Uri.parse(address),
 
@@ -127,7 +127,7 @@ class api{
       }
 
     }else{
-      return false;
+      return $data;
     }
   }
 

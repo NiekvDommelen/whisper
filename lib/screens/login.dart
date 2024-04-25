@@ -29,10 +29,9 @@ class _LoginPage extends State<LoginPage> {
     if (success){
       Navigator.popAndPushNamed(context, '/home');
     }else{
-      //TODO: review this / make it better
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Invalid username or password'),
+          content: Text('Incorrect username or password'),
           duration: Duration(seconds: 3),
         ),
       );
