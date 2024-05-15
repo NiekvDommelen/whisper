@@ -65,7 +65,7 @@ class _SignupPage extends State<SignupPage> {
     }
 
     var signup = await Api.signupUser(username, email, password);
-    if (signup["success"]?? false == true){
+    if (signup["success"] ?? false){
       Navigator.popAndPushNamed(context, '/home');
     }else{
       if(signup["error"] == "username already exists"){

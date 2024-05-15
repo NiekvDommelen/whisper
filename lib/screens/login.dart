@@ -22,6 +22,8 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
 
+  var incorrectLogin = false;
+
   void _loginUser() async {
     String username = _usernameTextController.text;
     String password = _passwordTextController.text;
@@ -35,6 +37,10 @@ class _LoginPage extends State<LoginPage> {
           duration: Duration(seconds: 3),
         ),
       );
+
+      setState(() {
+        incorrectLogin = true;
+      });
     }
   }
 
@@ -79,6 +85,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 20,),
+                if(incorrectLogin) Text("Incorrect username or password", style: TextStyle(color: Colors.red)),
                 Focus(
                   onFocusChange: (hasFocus) {
                     setState(() {
@@ -98,13 +105,14 @@ class _LoginPage extends State<LoginPage> {
                         ),
                       ),
                       child: TextField(
+                        key: Key('username'),
                         controller: _usernameTextController,
                         focusNode: _usernameTextFieldFocusNode,
                         onChanged: (value) {
                           setState(() {});
                         },
                         decoration: InputDecoration(
-                          hintText: 'Enter your username',
+                          hintText: 'username',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(8.0),
                         ),
@@ -112,7 +120,7 @@ class _LoginPage extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                if(!incorrectLogin) SizedBox(height: 20),
                 Focus(
                   onFocusChange: (hasFocus) {
                     setState(() {
@@ -132,6 +140,7 @@ class _LoginPage extends State<LoginPage> {
                         ),
                       ),
                       child: TextField(
+                        key: Key('password'),
                         obscureText: true,
                         autocorrect: false,
                         controller: _passwordTextController,
@@ -140,7 +149,7 @@ class _LoginPage extends State<LoginPage> {
                           setState(() {});
                         },
                         decoration: InputDecoration(
-                          hintText: 'Enter your password',
+                          hintText: 'password',
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.all(8.0),
                         ),
