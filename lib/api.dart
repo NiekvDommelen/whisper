@@ -121,9 +121,9 @@ class api{
     if($data["success"]?? false == true){
       bool login = await loginUser(username, password);
       if(login){
-        return true;
+        return $data;
       }else{
-        return false;
+        return {"success": false};
       }
 
     }else{
