@@ -104,7 +104,7 @@ class api{
     }
   }
 
-  Future<dynamic> signupUser(String username, String email, String password) async {
+  Future<bool> signupUser(String username, String email, String password) async {
     String address = "${_baseURL}signup";
     var response = await http.post(Uri.parse(address),
 
@@ -121,13 +121,13 @@ class api{
     if($data["success"]?? false == true){
       bool login = await loginUser(username, password);
       if(login){
-        return $data;
+        return true;
       }else{
-        return {"success": false};
+        return false;
       }
 
     }else{
-      return $data;
+      return false;
     }
   }
 
