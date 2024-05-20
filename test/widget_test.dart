@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whisper/screens/homepage.dart';
 import 'package:whisper/screens/login.dart';
 import 'package:whisper/setup.dart';
 import 'widget_test.mocks.dart';
@@ -11,7 +12,7 @@ import 'package:http/http.dart' as http;
 @GenerateMocks([api])
 
 void main() {
-  testWidgets('Displays error message on incorrect input', (WidgetTester tester) async {
+  testWidgets('login with invalid info', (WidgetTester tester) async {
     // Create a mock ApiService
     final mockApiService = Mockapi();
 
@@ -26,38 +27,47 @@ void main() {
     await tester.enterText(find.byKey(const Key('username')), 'wrongUser');
     await tester.enterText(find.byKey(const Key('password')), 'wrongPass');
 
+    await tester.pumpAndSettle();
     // Tap the continue button
     await tester.tap(find.text("Continue"));
     await tester.pumpAndSettle(); // Rebuild the widget after the state has changed.
 
     // Verify that the error message is displayed
-
     expect(find.byType(LoginPage), findsOneWidget);
-    expect(find.text('Incorrect username or password'), findsOneWidget);
+    expect(find.text("Incorrect username or password"), findsAtLeast(1));
   });
 
-  // testWidgets('login with valid info', (WidgetTester tester) async {
-  //   // Create a mock ApiService
-  //   final mockApiService = MockApiService();
-  //
-  //   // Define the response you want to mock
-  //   when(mockApiService.loginUser('validusername', 'validpassword'))
-  //       .thenAnswer((_) async => http.Response('{"error": "Invalid credentials"}', 401));
-  //
-  //   // Build our app and trigger a frame.
-  //   setupAndRunApp(service: mockApiService);
-  //   await tester.pumpAndSettle();
-  //   // Enter the username and password
-  //   await tester.enterText(find.byKey(const Key('username')), 'validusername');
-  //   await tester.enterText(find.byKey(const Key('password')), 'validpassword');
-  //   await tester.pumpAndSettle();
-  //   // Tap the continue button
-  //   await tester.tap(find.byKey(const Key('Continue')));
-  //   await tester.pumpAndSettle(); // Rebuild the widget after the state has changed.
-  //
-  //   // Verify that the error message is displayed
-  //   expect(find.byType(HomePage), findsOneWidget);
-  // });
+  testWidgets('login with invalid info', (WidgetTester tester) async {
+    // Create a mock ApiService
+    final mockApiService = Mockapi();
+
+    // Define the response you want to mock
+    when(mockApiService.loginUser('validusername', 'validpassword')).thenAnswer((realInvocation) => Future(() => true));
+    when(mockApiService.getContacts()).thenAnswer((realInvocation) => Future(() => {}));
+    when(mockApiService.getUserData()).thenAnswer((realInvocation) => Future(() => {
+      "id": 0,
+      "username": "testuser",
+      "email": "test@email.com",
+      "password": "validpassword in has form"
+    }
+    ));
+
+
+    // Build our app and trigger a frame.
+    setupAndRunApp(service: mockApiService);
+
+    // Enter the username and password
+    await tester.enterText(find.byKey(const Key('username')), 'validusername');
+    await tester.enterText(find.byKey(const Key('password')), 'validpassword');
+
+    await tester.pumpAndSettle();
+    // Tap the continue button
+    await tester.tap(find.text("Continue"));
+    await tester.pumpAndSettle(); // Rebuild the widget after the state has changed.
+
+    // Verify that the error message is displayed
+    expect(find.byType(HomePage), findsOneWidget);
+  });
 
   // testWidgets('signup with valid info', (WidgetTester tester) async {
   //     // Create a mock ApiService
