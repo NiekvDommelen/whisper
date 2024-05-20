@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/api.dart';
+import 'package:whisper/setup.dart';
 
 import 'screens/homepage.dart';
 import 'screens/login.dart';
@@ -9,7 +11,8 @@ import 'screens/chatpage.dart';
 import 'screens/DebugPage.dart';
 
 void main() {
-  runApp(const MyApp());
+  final service = api();
+  setupAndRunApp(service: service);
 }
 
 
