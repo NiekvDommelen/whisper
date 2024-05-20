@@ -1,14 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'api.dart';
+import 'main.dart';
 import 'userdata.dart';
 
+late api Api;
+
+void setupAndRunApp({required api service}) {
+  Api = service;
+  runApp(const MyApp());
+}
+
 userdata Userdata = userdata(0, "", "");
-api Api = api();
 Ws ws = Ws();
 
 var chatStream = StreamController.broadcast();
