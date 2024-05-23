@@ -48,7 +48,7 @@ void main() {
       "id": 0,
       "username": "testuser",
       "email": "test@email.com",
-      "password": "validpassword in has form"
+      "password": "validpassword in hash form"
     }
     ));
 
