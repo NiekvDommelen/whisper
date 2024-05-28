@@ -453,7 +453,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                     borderRadius: const BorderRadius.all(Radius.circular(25)),
                   ),
                   child: ListTile(
-                    title: (contactList[index]["sender"] == Userdata.username) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
+                    title: (contactList[index]["sender"] == Userdata.userid) ? Text(contactList[index]["receiver"].toString()) : Text(contactList[index]["sender"].toString()),
                     trailing: const SizedBox(
                       width: 100,
                       child: Text("accepted", style: TextStyle(color: Colors.white),),
@@ -651,7 +651,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                           onPressed: () => {Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatPage(data: {"contact_user": (contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),}),
+                          builder: (context) => ChatPage(data: {"contact_user": (contactList[index]["sender"] == Userdata.userid) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),}),
 
                         ),
                       )}, child: Row(
@@ -666,7 +666,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
-                            child: Text((contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
+                            child: Text((contactList[index]["sender"] == Userdata.userid) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
                                 style: GoogleFonts.jura(
                                     textStyle: TextStyle(
                                         color:
@@ -684,7 +684,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
-                                    Text((contactList[index]["sender"] == Userdata.username) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
+                                    Text((contactList[index]["sender"] == Userdata.userid) ? contactList[index]["receiver"].toString() : contactList[index]["sender"].toString(),
                                         style: GoogleFonts.jura(
                                             textStyle: TextStyle(
                                                 color: Theme.of(context)
