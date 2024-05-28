@@ -103,9 +103,16 @@ void main() {
       final mockApiService = Mockapi();
 
       // Define the response you want to mock
-      when(mockApiService.signupUser('validusername', 'validpassword', 'valid@email.com'))
-          .thenAnswer((_) => Future(() => {"success": true}));
-
+      when(mockApiService.signupUser('validusername','valid@email.com' ,'validpassword'))
+          .thenAnswer((_) async => Future(() => {"success": true}));
+      when(mockApiService.getContacts()).thenAnswer((realInvocation) => Future(() => {}));
+      when(mockApiService.getUserData()).thenAnswer((realInvocation) => Future(() => {
+        "id": 0,
+        "username": "testuser",
+        "email": "test@email.com",
+        "password": "validpassword in hash form"
+      }
+      ));
 
       // Build our app and trigger a frame.
       setupAndRunApp(service: mockApiService);
@@ -131,7 +138,7 @@ void main() {
 
       // Define the response you want to mock
       when(mockApiService.signupUser('validusername', 'validpassword', 'invalidemail'))
-          .thenAnswer((_) => Future(() => {"success": true}));
+          .thenAnswer((_) async => Future(() => {"success": false}));
 
 
       // Build our app and trigger a frame.
