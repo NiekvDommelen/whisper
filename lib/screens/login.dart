@@ -44,14 +44,19 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  Future<bool> _checkUserAuthenticationStatus() async {
+  Future _checkUserAuthenticationStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    debugPrint('Logged in: ${prefs.getBool('loggedIn') ?? false}');
+    String? username = prefs.getString('username');
+    String? password = prefs.getString('password');
     if(prefs.getBool('loggedIn') ?? false){
-      Navigator.popAndPushNamed(context, '/home');
-      return true;
+      bool success = await Api.loginUser(username!, password!);
+      if(success){
+        Navigator.popAndPushNamed(context, '/home');
+      }else{
+        return;
+      }
     }else{
-      return false;
+      return;
     }
   }
 
