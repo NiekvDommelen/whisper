@@ -98,6 +98,8 @@ class api{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('loggedIn', true);
       prefs.setInt('userid', $data["userid"]);
+      prefs.setString('username', username);
+      prefs.setString('password', password);
       return true;
     }else{
       return false;
