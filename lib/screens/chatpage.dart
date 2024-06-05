@@ -113,7 +113,8 @@ class _ChatPage extends State<ChatPage>{
 
                     var displayTime = "$displayHour:$displayMinute";
 
-                    if(messages[index]["sender"] == userid){
+
+                    if(messages[index]["sender"].toString() == userid.toString() && messages[index]["receiver"].toString() == data["contact_user"].toString()){
 
 
                       return Row(
@@ -152,7 +153,7 @@ class _ChatPage extends State<ChatPage>{
 
                         ),],
                       );
-                    }else {
+                    }else if(messages[index]["sender"].toString() == data["contact_user"].toString() && messages[index]["receiver"].toString() == userid.toString()) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [Container(

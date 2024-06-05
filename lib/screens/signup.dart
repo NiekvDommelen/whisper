@@ -31,17 +31,17 @@ class _SignupPage extends State<SignupPage> {
 
   bool _inputValidation( username, email, password) {
     inputError = {};
-    if (username == ""){
+    if (username.toString().trim() == ""){
       inputError["username"] = "empty";
     }else if(username.length < 5){
       inputError["username"] = "short";
     }
-    if (email == ""){
+    if (email.toString().trim() == ""){
       inputError["email"] = "empty";
     }else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)){
       inputError["email"] = "invalid";
     }
-    if (password == ""){
+    if (password.toString().trim() == ""){
       inputError["password"] = "empty";
     }else if(password.length < 8){
       inputError["password"] = "short";
@@ -130,6 +130,7 @@ class _SignupPage extends State<SignupPage> {
                         ),
                       ),
                       child: TextField(
+                        key: Key("email"),
                         controller: _emailTextController,
                         focusNode: _emailTextFieldFocusNode,
                         onChanged: (value) {
@@ -168,6 +169,7 @@ class _SignupPage extends State<SignupPage> {
                         ),
                       ),
                       child: TextField(
+                        key: Key("username"),
                         controller: _usernameTextController,
                         focusNode: _usernameTextFieldFocusNode,
                         onChanged: (value) {
@@ -206,6 +208,7 @@ class _SignupPage extends State<SignupPage> {
                         ),
                       ),
                       child: TextField(
+                        key: Key("password"),
                         obscureText: true,
                         autocorrect: false,
                         controller: _passwordTextController,
