@@ -37,8 +37,10 @@ class api{
   }
 
   Future<dynamic> searchUserData(userid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String address = "${_baseURL}user";
 
+    var token = prefs.getString("token");
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -46,6 +48,7 @@ class api{
       },
       body: {
         'userid': userid.toString(),
+        'token': token
       },
     );
 
@@ -58,9 +61,10 @@ class api{
   }
 
   Future<dynamic> getUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int userid = await getUserId();
     String address = "${_baseURL}user";
-
+    var token = prefs.getString("token");
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -68,6 +72,7 @@ class api{
       },
       body: {
         'userid': userid.toString(),
+        'token': token
       },
     );
 
@@ -100,6 +105,7 @@ class api{
       prefs.setInt('userid', $data["userid"]);
       prefs.setString('username', username);
       prefs.setString('password', password);
+      prefs.setString('token', $data['token']);
       return true;
     }else{
       return false;
@@ -141,8 +147,10 @@ class api{
   }
 
   Future<dynamic> searchUsers(String search) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userid = await getUserId();
     String address = "${_baseURL}users";
-
+    var token = prefs.getString('token');
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -150,6 +158,8 @@ class api{
       },
       body: {
         'query': search,
+        'token': token,
+        'userid': userid
       },
     );
     var $data = [];
@@ -160,15 +170,17 @@ class api{
   }
 
   Future<dynamic> getContacts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int userid = await getUserId();
     String address = "${_baseURL}contacts";
-
+    var token = prefs.getString('token');
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body: {
+        'token': token,
         'userid': userid.toString(),
       },
     );
@@ -180,9 +192,10 @@ class api{
   }
 
   Future<bool> addContact(contactid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int userid = await getUserId();
     String address = "${_baseURL}contact";
-
+    var token = prefs.getString('token');
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -191,6 +204,7 @@ class api{
       body: {
         'userid': userid.toString(),
         'contact_userid': contactid.toString(),
+        'token': token
       },
     );
 
@@ -199,15 +213,19 @@ class api{
   }
 
   Future<bool> acceptContact(contactid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String address = "${_baseURL}accept_contact_request";
-
+    var token = prefs.getString('token');
+    var userid = await getUserId();
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body: {
+        'userid': userid,
         'contact_id': contactid.toString(),
+        'token': token
       },
     );
 
@@ -215,15 +233,20 @@ class api{
   }
 
   Future<bool> declineContact(contactid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String address = "${_baseURL}decline_contact_request";
 
+    var token = prefs.getString('token');
+    var userid = await getUserId();
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body: {
+        'userid': userid,
         'contact_id': contactid.toString(),
+        'token': token
       },
     );
 
@@ -231,9 +254,10 @@ class api{
   }
 
   Future<bool> contactExists (int userid, int contact_userid) async{
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String address = "${_baseURL}contacts";
-
+    var token = prefs.getString('token');
+    var userid = await getUserId();
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -241,6 +265,7 @@ class api{
       },
       body: {
         'userid': userid.toString(),
+        'token': token
       },
     );
 
@@ -256,9 +281,11 @@ class api{
   }
 
   Future<dynamic> getMessages(int offset) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     int userid = await getUserId();
     String address = "${_baseURL}messages";
 
+    var token = prefs.getString('token');
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -267,6 +294,7 @@ class api{
       body: {
         'userid': userid.toString(),
         'offset': offset.toString(),
+        'token': token
       },
     );
     var $data = [];
