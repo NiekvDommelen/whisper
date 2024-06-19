@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:whisper/userdata.dart';
+import "package:pointycastle/export.dart";
+import 'package:pointycastle/src/platform_check/platform_check.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 class api{
   static const String _baseURL = "http://10.59.138.18:3000/api/";
@@ -29,6 +32,38 @@ class api{
   //   Userdata.email = data["email"];
   //   userdata(Userdata.userid, Userdata.username, Userdata.email);
   // }
+
+  AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> generateRSAkeyPair(
+      SecureRandom secureRandom,
+      {int bitLength = 2048}) {
+    // Create an RSA key generator and initialize it
+
+    // final keyGen = KeyGenerator('RSA'); // Get using registry
+    final keyGen = RSAKeyGenerator();
+
+    keyGen.init(ParametersWithRandom(
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), bitLength, 64),
+        secureRandom));
+
+    // Use the generator
+
+    final pair = keyGen.generateKeyPair();
+
+    // Cast the generated key pair into the RSA key types
+
+    final myPublic = pair.publicKey as RSAPublicKey;
+    final myPrivate = pair.privateKey as RSAPrivateKey;
+
+    return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(myPublic, myPrivate);
+  }
+
+  SecureRandom exampleSecureRandom() {
+
+    final secureRandom = SecureRandom('Fortuna')
+      ..seed(KeyParameter(
+          Platform.instance.platformEntropySource().getBytes(32)));
+    return secureRandom;
+  }
 
   Future<int> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -88,6 +123,12 @@ class api{
   Future<bool> loginUser(String username, String password) async{
     String address = "${_baseURL}login";
 
+    final pair = generateRSAkeyPair(exampleSecureRandom());
+    final public = pair.publicKey;
+    final private = pair.privateKey;
+    final privatePem = CryptoUtils.encodeRSAPrivateKeyToPem(private);
+    final publicPem = CryptoUtils.encodeRSAPublicKeyToPem(public);
+
     var response = await http.post(Uri.parse(address),
 
       headers: <String, String>{
@@ -96,17 +137,19 @@ class api{
       body: {
         'username': username,
         'password': password,
+        'publicKey': publicPem.toString()
       },
     );
     var $data = jsonDecode(response.body);
     if($data["success"] == true){
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('loggedIn', true);
-      prefs.setInt('userid', $data["userid"]);
-      prefs.setString('username', username);
-      prefs.setString('password', password);
-      prefs.setString('token', $data['token']);
-      return true;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('loggedIn', true);
+        prefs.setInt('userid', $data["userid"]);
+        prefs.setString('username', username);
+        prefs.setString('password', password);
+        prefs.setString('token', $data['token']);
+        prefs.setString('privatePem', privatePem);
+        return true;
     }else{
       return false;
     }
