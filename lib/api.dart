@@ -149,6 +149,7 @@ class api{
         prefs.setString('password', password);
         prefs.setString('token', $data['token']);
         prefs.setString('privatePem', privatePem);
+        prefs.setString('publicPem', publicPem);
         return true;
     }else{
       return false;
@@ -202,14 +203,15 @@ class api{
       body: {
         'query': search,
         'token': token,
-        'userid': userid
+        'userid': userid.toString()
       },
     );
-    var $data = [];
+
     if(response.body.isNotEmpty) {
-      $data = jsonDecode(response.body);
+      var $data = jsonDecode(response.body);
+      return $data;
     }
-    return $data;
+    return {};
   }
 
   Future<dynamic> getContacts() async {
@@ -227,11 +229,11 @@ class api{
         'userid': userid.toString(),
       },
     );
-    var $data = [];
     if(response.body.isNotEmpty) {
-      $data = jsonDecode(response.body);
+      var $data = jsonDecode(response.body);
+      return $data;
     }
-    return $data;
+    return [];
   }
 
   Future<bool> addContact(contactid) async {
@@ -266,7 +268,7 @@ class api{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body: {
-        'userid': userid,
+        'userid': userid.toString(),
         'contact_id': contactid.toString(),
         'token': token
       },
@@ -287,7 +289,7 @@ class api{
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
       body: {
-        'userid': userid,
+        'userid': userid.toString(),
         'contact_id': contactid.toString(),
         'token': token
       },
