@@ -120,6 +120,33 @@ class api{
 
   }
 
+  Future<bool> checkLogin() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String address = "${_baseURL}login";
+    var username = prefs.getString('username');
+    var password = prefs.getString('password');
+    var publicPem = prefs.getString('publicPem');
+
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'username': username,
+        'password': password,
+        'publicKey': publicPem.toString()
+      },
+    );
+
+    var $data = jsonDecode(response.body);
+    if($data["success"] == true){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   Future<bool> loginUser(String username, String password) async{
     String address = "${_baseURL}login";
 

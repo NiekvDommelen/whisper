@@ -49,7 +49,7 @@ class _LoginPage extends State<LoginPage> {
     String? username = prefs.getString('username');
     String? password = prefs.getString('password');
     if(prefs.getBool('loggedIn') ?? false){
-      bool success = await Api.loginUser(username!, password!);
+      bool success = await Api.checkLogin();
       if(success){
         Navigator.popAndPushNamed(context, '/home');
       }else{
