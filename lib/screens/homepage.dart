@@ -95,7 +95,7 @@ class _HomePage extends State<HomePage> with TickerProviderStateMixin {
       debugPrint(Userdata.userid.toString());
       debugPrint("data.length");
       debugPrint($data.toString());
-      for(var i = 0; i < $data.length - 1; i++){
+      for(var i = 0; i < $data.length; i++){
         if($data[i]["status"] == "awaiting" && $data[i]["sender"] == Userdata.userid || $data[i]["status"] == "declined" && $data[i]["sender"] == Userdata.userid){
           awaitingList.add($data[i]);
         }else if($data[i]["status"] == "accepted"){
