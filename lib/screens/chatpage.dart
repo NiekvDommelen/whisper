@@ -48,12 +48,42 @@ class _ChatPage extends State<ChatPage> {
           setState(() {
 
             value.forEach((el) async {
-              debugPrint("VALUEEEES");
+              debugPrint("BEGIN EL:");
               debugPrint(el.toString());
-              var decrypted = await decrypte(el["message_data"]);
-              debugPrint(decrypted.toString());
+              if (el["sender"].toString() == tmpuserid.toString() && el["receiver"].toString() == data["contact_user"].toString()){
+
+                var decrypted;
+                try {
+                  decrypted = await decrypte(el["sender_message_data"]);
+                } on Exception catch (exception) {
+                  decrypted = "Message could not be decrypted";
+                } catch (error) {
+                  decrypted = "Something went wrong while decrypting";
+                }
                 el["message_data"] = decrypted;
-                messages.insert(0, el["message_data"]);
+                debugPrint("end EL:");
+                debugPrint(el.toString());
+                messages.add(el);
+
+              } else if(el["sender"].toString() == // if received
+                  data["contact_user"].toString() &&
+                  el["receiver"].toString() ==
+                      tmpuserid.toString()){
+                var decrypted;
+                try {
+                  decrypted = await decrypte(el["message_data"]);
+                } on Exception catch (exception) {
+                  decrypted = "Message could not be decrypted";
+                } catch (error) {
+                  decrypted = "Something went wrong while decrypting";
+                }
+
+                el["message_data"] = decrypted;
+                debugPrint("end EL:");
+                debugPrint(el.toString());
+                messages.add(el);
+              }
+
 
             });
             debugPrint(value.toString());
@@ -105,6 +135,7 @@ class _ChatPage extends State<ChatPage> {
   sendMessage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    final contact_publicPem = await Api.getPublicKey(data["contact_user"].toString());
     final publicPem = prefs.getString("publicPem");
     if(publicPem == null){
       // session expired
@@ -113,6 +144,10 @@ class _ChatPage extends State<ChatPage> {
     }
 
     final publicRSA = CryptoUtils.rsaPublicKeyFromPem(publicPem);
+    final contact_publicRSA = CryptoUtils.rsaPublicKeyFromPem(contact_publicPem);
+
+    debugPrint("publicRSA");
+    debugPrint(publicRSA.toString());
 
     var chatdata = chatInputController.value.text;
 
@@ -121,12 +156,14 @@ class _ChatPage extends State<ChatPage> {
     }
     final bytes = utf8.encode(chatdata);
     var encrypted = rsaEncrypt(publicRSA, bytes);
+    var contact_encrypted = rsaEncrypt(contact_publicRSA, bytes);
 
     var token = prefs.getString("token");
 
     ws.channel.sink.add(jsonEncode({
       "receiver": data["contact_user"],
-      "message_data": encrypted,
+      "message_data": contact_encrypted,
+      "sender_message_data": encrypted,
       "token": token
     }));
     chatInputController.clear();
@@ -139,6 +176,7 @@ class _ChatPage extends State<ChatPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final privatePem = prefs.getString("privatePem");
     final publicPem = prefs.getString("publicPem");
+
     if(privatePem == null){
       // session expired
       //TODO: LOG OUT USER
@@ -146,8 +184,9 @@ class _ChatPage extends State<ChatPage> {
     }
     final privateRSA = CryptoUtils.rsaPrivateKeyFromPem(privatePem);
     final publicRSA = CryptoUtils.rsaPublicKeyFromPem(publicPem!);
-    var testdata = utf8.encode("work you stupid whore");
-    var testencrypte = rsaEncrypt(publicRSA, testdata);
+    debugPrint(" privateRSA and publicRSA");
+    debugPrint(privateRSA.toString());
+    debugPrint(publicRSA.toString());
     var decrypte = rsaDecrypt(privateRSA, base64);
     var text = utf8.decode(decrypte).toString();
     debugPrint(text);
@@ -162,8 +201,28 @@ class _ChatPage extends State<ChatPage> {
 
 
             streamSubscription = chatStream.stream.listen((event) async {
-              event["message_data"] = await decrypte(event["message_data"]);
-              debugPrint("EVENT:");
+              debugPrint("BEGIN EVENT:");
+              debugPrint(event.toString());
+
+              if (event["sender"].toString() == userid.toString() && event["receiver"].toString() == data["contact_user"].toString()){
+                try {
+                  event["message_data"] = await decrypte(event["sender_message_data"]);
+                } on Exception catch (exception) {
+                  event["message_data"] = "Message could not be decrypted";
+                } catch (error) {
+                  event["message_data"] = "Something went wrong while decrypting";
+                }
+              }else{
+                try {
+                  event["message_data"] = await decrypte(event["message_data"]);
+                } on Exception catch (exception) {
+                  event["message_data"] = "Message could not be decrypted";
+                } catch (error) {
+                  event["message_data"] = "Something went wrong while decrypting";
+                }
+              }
+
+              debugPrint("end EVENT:");
               debugPrint(event.toString());
               setState(() {
                 messages.insert(0, event);
@@ -207,7 +266,7 @@ class _ChatPage extends State<ChatPage> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var time =
-                        DateTime.parse(messages[index]["timestamp"].toString());
+                        DateTime.parse(messages[index]["timestamp"]);
                     var displayHour = time.hour.toString();
                     var displayMinute = time.minute.toString();
 
@@ -220,10 +279,7 @@ class _ChatPage extends State<ChatPage> {
 
                     var displayTime = "$displayHour:$displayMinute";
 
-                    if (messages[index]["sender"].toString() ==
-                            userid.toString() &&
-                        messages[index]["receiver"].toString() ==
-                            data["contact_user"].toString()) {
+                    if (messages[index]["sender"].toString() == userid.toString() && messages[index]["receiver"].toString() == data["contact_user"].toString()) { // if send
 
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -259,7 +315,7 @@ class _ChatPage extends State<ChatPage> {
                               )),
                         ],
                       );
-                    } else if (messages[index]["sender"].toString() ==
+                    } else if (messages[index]["sender"].toString() == // if received
                             data["contact_user"].toString() &&
                         messages[index]["receiver"].toString() ==
                             userid.toString()) {
