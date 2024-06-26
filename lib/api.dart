@@ -8,7 +8,8 @@ import 'package:pointycastle/src/platform_check/platform_check.dart';
 import 'package:basic_utils/basic_utils.dart';
 
 class api{
-  static const String _baseURL = "http://10.59.138.18:3000/api/";
+  static const String _baseURL = "http://192.168.1.196:3000/api/";
+
 
 
   api();
@@ -141,10 +142,34 @@ class api{
 
     var $data = jsonDecode(response.body);
     if($data["success"] == true){
+      prefs.setString('token', $data['token']);
+      prefs.setInt('userid', $data["userid"]);
       return true;
     }else{
       return false;
     }
+  }
+
+  Future<String> getPublicKey(String contact_userid) async{
+    String address = "${_baseURL}publickey";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var userid = prefs.getInt("userid");
+    var token = prefs.getString("token");
+    var response = await http.post(Uri.parse(address),
+
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: {
+        'userid': userid.toString(),
+        'token': token,
+        'contact_userid': contact_userid.toString()
+      },
+    );
+    var $data = jsonDecode(response.body);
+
+    return $data["publicKey"];
   }
 
   Future<bool> loginUser(String username, String password) async{
@@ -238,7 +263,7 @@ class api{
       var $data = jsonDecode(response.body);
       return $data;
     }
-    return {};
+    return null;
   }
 
   Future<dynamic> getContacts() async {
