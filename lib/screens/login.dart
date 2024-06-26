@@ -46,8 +46,6 @@ class _LoginPage extends State<LoginPage> {
 
   Future _checkUserAuthenticationStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('username');
-    String? password = prefs.getString('password');
     if(prefs.getBool('loggedIn') ?? false){
       bool success = await Api.checkLogin();
       if(success){
